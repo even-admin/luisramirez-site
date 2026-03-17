@@ -162,26 +162,8 @@
   }
 }
 
-.site-logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.logo-icon {
+.header-spacer {
   width: 24px;
-  height: auto;
-  opacity: 0.85;
-  transition: opacity var(--transition-interactive);
-}
-
-.site-logo:hover .logo-icon {
-  opacity: 1;
-}
-
-/* Invert logo in dark mode so it appears white */
-[data-theme="dark"] .logo-icon {
-  filter: invert(1);
 }
 
 .header-nav {
