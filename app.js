@@ -16,19 +16,16 @@
     if (typeof Lenis === 'undefined') return;
     var isMobile = window.innerWidth < 768;
     lenis = new Lenis({
-      lerp: isMobile ? 0.15 : 0.08,
-      smooth: true,
-      touchMultiplier: isMobile ? 2 : 1
+      lerp: isMobile ? 0.12 : 0.1,
+      smoothWheel: true,
+      touchMultiplier: isMobile ? 1.5 : 1
     });
 
-    lenis.on('scroll', function () {
-      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.update();
-    });
+    lenis.on('scroll', ScrollTrigger.update);
 
     gsap.ticker.add(function (time) {
       lenis.raf(time * 1000);
     });
-    gsap.ticker.lagSmoothing(0);
   }
 
   // ── Preloader ─────────────────────────────
@@ -310,32 +307,8 @@
       if (!img) return;
 
       gsap.to(img, {
-        scrollTrigger: { trigger: showcase, start: 'top bottom', end: 'bottom top', scrub: 0.5 },
+        scrollTrigger: { trigger: showcase, start: 'top bottom', end: 'bottom top', scrub: true },
         y: -50, ease: 'none'
-      });
-    });
-  }
-
-  // ── Gentle Scroll Snap ────────────────────
-
-  function initScrollSnap() {
-    if (typeof ScrollTrigger === 'undefined') return;
-    if (window.innerWidth < 768) return; // No snap on mobile
-
-    var sections = gsap.utils.toArray('.section:not(.section-setup)');
-    var hero = document.getElementById('hero');
-    var panels = hero ? [hero].concat(sections) : sections;
-
-    // Create snap points from section positions
-    panels.forEach(function (panel) {
-      ScrollTrigger.create({
-        trigger: panel,
-        start: 'top top',
-        snap: {
-          snapTo: 1,
-          duration: { min: 0.2, max: 0.4 },
-          ease: 'power1.inOut'
-        }
       });
     });
   }
