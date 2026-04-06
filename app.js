@@ -1,24 +1,24 @@
 /* ============================================
-   luisracosta.com — Full-Screen Scroll Redesign
+   luisracosta.com — iOS Product Launch Feel
    GSAP + ScrollTrigger + Lenis
-   Per-section animations, gentle snap,
-   scroll progress, clock, lottery, copy email
+   Desktop: cinematic scroll reveals
+   Mobile: untouched, free scroll
    ============================================ */
 
 (function () {
   'use strict';
 
   var lenis;
+  var isDesktop = window.innerWidth >= 768;
 
   // ── Lenis Smooth Scroll ───────────────────
 
   function initLenis() {
     if (typeof Lenis === 'undefined') return;
-    var isMobile = window.innerWidth < 768;
     lenis = new Lenis({
-      lerp: isMobile ? 0.12 : 0.1,
+      lerp: isDesktop ? 0.1 : 0.12,
       smoothWheel: true,
-      touchMultiplier: isMobile ? 1.5 : 1
+      touchMultiplier: isDesktop ? 1 : 1.5
     });
 
     lenis.on('scroll', ScrollTrigger.update);
@@ -55,8 +55,10 @@
 
     gsap.to(items, {
       opacity: 1, y: 0,
-      duration: 0.7, ease: 'power2.out',
-      stagger: 0.15, delay: 0.1,
+      duration: isDesktop ? 0.8 : 0.6,
+      ease: 'power3.out',
+      stagger: isDesktop ? 0.18 : 0.12,
+      delay: 0.15,
       onComplete: startCoordLottery
     });
   }
@@ -153,54 +155,46 @@
     links.forEach(function (link) {
       link.addEventListener('click', function (e) {
         e.preventDefault();
-        var target = document.getElementById(link.getAttribute('data-section'));
-        // Close hamburger menu if open
         nav.classList.remove('nav-open');
+        var target = document.getElementById(link.getAttribute('data-section'));
         if (target && lenis) lenis.scrollTo(target, { offset: -60 });
         else if (target) target.scrollIntoView({ behavior: 'smooth' });
       });
     });
 
-    // Panel links (mobile hamburger) — same behavior
     var panelLinks = document.querySelectorAll('.nav-panel .nav-link');
     panelLinks.forEach(function (link) {
       link.addEventListener('click', function (e) {
         e.preventDefault();
-        var target = document.getElementById(link.getAttribute('data-section'));
         nav.classList.remove('nav-open');
+        var target = document.getElementById(link.getAttribute('data-section'));
         if (target && lenis) lenis.scrollTo(target, { offset: -60 });
         else if (target) target.scrollIntoView({ behavior: 'smooth' });
       });
     });
   }
 
-  // ── Hamburger Menu Toggle ─────────────────
+  // ── Hamburger ─────────────────────────────
 
   function initHamburger() {
     var btn = document.getElementById('nav-hamburger');
     var nav = document.getElementById('site-nav');
     if (!btn || !nav) return;
-
-    btn.addEventListener('click', function () {
-      nav.classList.toggle('nav-open');
-    });
+    btn.addEventListener('click', function () { nav.classList.toggle('nav-open'); });
   }
 
-  // ── Scroll Progress Indicator ─────────────
+  // ── Scroll Progress ───────────────────────
 
   function initScrollProgress() {
     var fill = document.getElementById('scroll-fill');
     if (!fill) return;
-
     window.addEventListener('scroll', function () {
-      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      fill.style.height = pct + '%';
+      var pct = (window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      fill.style.height = Math.min(pct, 100) + '%';
     });
   }
 
-  // ── Per-Section Scroll Animations ─────────
+  // ── Section Animations ────────────────────
 
   function initSectionAnimations() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
@@ -210,95 +204,171 @@
       return;
     }
 
-    // About: paragraphs fade up staggered
-    animateSection('#about', '[data-animate]', {
-      y: 0, opacity: 1, duration: 0.6, stagger: 0.15
-    });
-
-    // Setup intro
-    animateSection('#setup', '.setup-intro[data-animate]', {
-      y: 0, opacity: 1, duration: 0.5
-    });
-
-    // Hardware images: scale up + fade
-    document.querySelectorAll('.hw-image[data-animate]').forEach(function (el) {
-      gsap.to(el, {
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-        opacity: 1, scale: 1, y: 0, duration: 0.8, ease: 'power2.out'
-      });
-    });
-
-    // Hardware specs: slide from right
-    document.querySelectorAll('.hw-name[data-animate], .hw-tagline[data-animate], .hw-specs[data-animate]').forEach(function (el, i) {
-      gsap.to(el, {
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-        opacity: 1, x: 0, duration: 0.6, ease: 'power2.out', delay: i * 0.1
-      });
-    });
-
-    // Subsection labels
-    animateSection('#setup', '.subsection-label[data-animate]', {
-      y: 0, opacity: 1, duration: 0.4, stagger: 0
-    });
-
-    // AI cards: pop in staggered
-    document.querySelectorAll('.ai-primary-grid, .logo-grid').forEach(function (grid) {
-      var cards = grid.querySelectorAll('[data-animate]');
-      if (!cards.length) return;
-      gsap.to(cards, {
-        scrollTrigger: { trigger: grid, start: 'top 85%', once: true },
-        opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out', stagger: 0.06
-      });
-    });
-
-    // Work: slide up with rotation correction
-    animateSection('#work', '[data-animate]', {
-      y: 0, rotation: 0, opacity: 1, duration: 0.6, stagger: 0.1
-    });
-
-    // Writing: slide from left
-    var writingItems = document.querySelectorAll('#writing [data-animate]');
-    if (writingItems.length) {
-      gsap.to(writingItems, {
-        scrollTrigger: { trigger: '#writing', start: 'top 80%', once: true },
-        opacity: 1, x: 0, duration: 0.5, ease: 'power2.out', stagger: 0.08
-      });
-    }
-
-    // Newsletter: fade up
-    animateSection('#newsletter', '[data-animate]', {
-      y: 0, opacity: 1, duration: 0.6, stagger: 0.1
-    });
-
-    // Section labels: fade in with slide
+    // Section label fade-in
     document.querySelectorAll('.section').forEach(function (section) {
       ScrollTrigger.create({
         trigger: section, start: 'top 80%', once: true,
         onEnter: function () { section.classList.add('visible'); }
       });
     });
+
+    if (isDesktop) {
+      initDesktopAnimations();
+    } else {
+      initMobileAnimations();
+    }
   }
 
-  function animateSection(sectionSelector, childSelector, props) {
-    var section = document.querySelector(sectionSelector);
-    if (!section) return;
-    var children = section.querySelectorAll(childSelector);
-    if (!children.length) return;
+  // ── MOBILE: Simple, fast, no drama ────────
 
-    var baseProps = {
-      scrollTrigger: { trigger: section, start: 'top 80%', once: true },
-      ease: 'power2.out'
-    };
-
-    for (var key in props) { baseProps[key] = props[key]; }
-    gsap.to(children, baseProps);
+  function initMobileAnimations() {
+    document.querySelectorAll('.section').forEach(function (section) {
+      var items = section.querySelectorAll('[data-animate]');
+      if (!items.length) return;
+      gsap.to(items, {
+        scrollTrigger: { trigger: section, start: 'top 85%', once: true },
+        opacity: 1, y: 0, x: 0, scale: 1, rotation: 0,
+        duration: 0.5, ease: 'power2.out', stagger: 0.06
+      });
+    });
   }
 
-  // ── Hardware Parallax ─────────────────────
+  // ── DESKTOP: iOS product launch reveals ───
+
+  function initDesktopAnimations() {
+
+    // About — slow cinematic paragraph reveals
+    var aboutItems = document.querySelectorAll('#about [data-animate]');
+    if (aboutItems.length) {
+      gsap.to(aboutItems, {
+        scrollTrigger: { trigger: '#about', start: 'top 75%', once: true },
+        opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.2
+      });
+    }
+
+    // Setup intro
+    var setupIntro = document.querySelector('.setup-intro[data-animate]');
+    if (setupIntro) {
+      gsap.to(setupIntro, {
+        scrollTrigger: { trigger: setupIntro, start: 'top 80%', once: true },
+        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out'
+      });
+    }
+
+    // Hardware images — big cinematic scale reveal
+    document.querySelectorAll('.hw-image[data-animate]').forEach(function (el) {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+        opacity: 1, scale: 1, y: 0,
+        duration: 1.2, ease: 'power3.out'
+      });
+    });
+
+    // Hardware names — slide up with clip reveal feel
+    document.querySelectorAll('.hw-name[data-animate]').forEach(function (el) {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        opacity: 1, x: 0, duration: 0.8, ease: 'power3.out'
+      });
+    });
+
+    // Hardware taglines — gentle fade after name
+    document.querySelectorAll('.hw-tagline[data-animate]').forEach(function (el) {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        opacity: 1, x: 0, duration: 0.7, ease: 'power2.out', delay: 0.15
+      });
+    });
+
+    // Hardware specs — each row cascades in like a typewriter
+    document.querySelectorAll('.hw-specs[data-animate]').forEach(function (specsBlock) {
+      var rows = specsBlock.querySelectorAll('.spec-row');
+      gsap.fromTo(rows,
+        { opacity: 0, x: 15 },
+        {
+          scrollTrigger: { trigger: specsBlock, start: 'top 80%', once: true },
+          opacity: 1, x: 0,
+          duration: 0.5, ease: 'power2.out', stagger: 0.1
+        }
+      );
+
+      // "Replaces" highlight — slight scale pulse after specs land
+      var highlight = specsBlock.querySelector('.spec-highlight');
+      if (highlight) {
+        gsap.fromTo(highlight,
+          { scale: 1 },
+          {
+            scrollTrigger: { trigger: specsBlock, start: 'top 80%', once: true },
+            scale: 1.03, duration: 0.3, ease: 'power2.out',
+            delay: rows.length * 0.1 + 0.3,
+            yoyo: true, repeat: 1
+          }
+        );
+      }
+    });
+
+    // Subsection labels
+    document.querySelectorAll('.subsection-label[data-animate]').forEach(function (el) {
+      gsap.to(el, {
+        scrollTrigger: { trigger: el, start: 'top 85%', once: true },
+        opacity: 1, y: 0, duration: 0.5, ease: 'power2.out'
+      });
+    });
+
+    // AI primary cards — scale up with slight rotation snap
+    var aiCards = document.querySelectorAll('.ai-primary-grid [data-animate]');
+    if (aiCards.length) {
+      gsap.to(aiCards, {
+        scrollTrigger: { trigger: '.ai-primary-grid', start: 'top 80%', once: true },
+        opacity: 1, y: 0, scale: 1, duration: 0.8,
+        ease: 'back.out(1.2)', stagger: 0.15
+      });
+    }
+
+    // Logo grid cards — ripple from top-left
+    document.querySelectorAll('.logo-grid').forEach(function (grid) {
+      var cards = grid.querySelectorAll('[data-animate]');
+      if (!cards.length) return;
+      gsap.to(cards, {
+        scrollTrigger: { trigger: grid, start: 'top 82%', once: true },
+        opacity: 1, y: 0, scale: 1,
+        duration: 0.5, ease: 'back.out(1.4)', stagger: 0.05
+      });
+    });
+
+    // Work card — confident slide up
+    var workItems = document.querySelectorAll('#work [data-animate]');
+    if (workItems.length) {
+      gsap.to(workItems, {
+        scrollTrigger: { trigger: '#work', start: 'top 78%', once: true },
+        opacity: 1, y: 0, rotation: 0,
+        duration: 0.9, ease: 'power3.out', stagger: 0.12
+      });
+    }
+
+    // Writing — articles slide in from left, staggered
+    var writingItems = document.querySelectorAll('#writing [data-animate]');
+    if (writingItems.length) {
+      gsap.to(writingItems, {
+        scrollTrigger: { trigger: '#writing', start: 'top 78%', once: true },
+        opacity: 1, x: 0, duration: 0.6, ease: 'power3.out', stagger: 0.08
+      });
+    }
+
+    // Newsletter — clean fade up
+    var nlItems = document.querySelectorAll('#newsletter [data-animate]');
+    if (nlItems.length) {
+      gsap.to(nlItems, {
+        scrollTrigger: { trigger: '#newsletter', start: 'top 78%', once: true },
+        opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12
+      });
+    }
+  }
+
+  // ── Hardware Parallax (desktop only) ──────
 
   function initHardwareParallax() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-    if (window.innerWidth < 768) return;
+    if (!isDesktop || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
 
     ['hw-mini', 'hw-mbp'].forEach(function (id) {
       var showcase = document.getElementById(id);
@@ -308,7 +378,7 @@
 
       gsap.to(img, {
         scrollTrigger: { trigger: showcase, start: 'top bottom', end: 'bottom top', scrub: true },
-        y: -50, ease: 'none'
+        y: -40, ease: 'none'
       });
     });
   }
@@ -318,12 +388,9 @@
   function initCopyEmail() {
     var btn = document.getElementById('copy-email');
     if (!btn) return;
-
     btn.addEventListener('click', function () {
       if (navigator.clipboard) {
-        navigator.clipboard.writeText('contacto@luisracosta.com').then(function () {
-          showToast('Copied');
-        });
+        navigator.clipboard.writeText('contacto@luisracosta.com').then(function () { showToast('Copied'); });
       } else {
         var ta = document.createElement('textarea');
         ta.value = 'contacto@luisracosta.com';
@@ -352,18 +419,15 @@
   function initNewsletter() {
     var form = document.getElementById('newsletter-form');
     if (!form) return;
-
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var email = document.getElementById('email-input').value.trim();
       if (!email || email.indexOf('@') === -1) return;
-
       try {
         var subs = JSON.parse(localStorage.getItem('newsletter_subs') || '[]');
         if (subs.indexOf(email) === -1) subs.push(email);
         localStorage.setItem('newsletter_subs', JSON.stringify(subs));
       } catch (err) {}
-
       document.getElementById('form-row').hidden = true;
       document.getElementById('newsletter-success').hidden = false;
     });
@@ -374,12 +438,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     initClock();
-    initLenis();
 
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
     }
 
+    initLenis();
     initPreloader();
     initNav();
     initHamburger();
