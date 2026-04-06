@@ -479,6 +479,10 @@ a { color: inherit; text-decoration: none; }
    HAMBURGER NAV (mobile)
    ============================================ */
 
+.nav-right-group {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+
 .nav-hamburger {
   display: none; /* Hidden on desktop */
   width: 44px; height: 44px; border-radius: 8px;
@@ -527,23 +531,51 @@ a { color: inherit; text-decoration: none; }
    ============================================ */
 
 @media (max-width: 768px) {
-  /* Layout */
+  /* Layout: each section still feels like a full page */
   .col, .col-sm, .col-md, .col-wide, .col-hero { padding: 0 20px; }
-  .section { min-height: auto; padding: 80px 0; }
+  .section {
+    min-height: 100svh; min-height: 100vh;
+    padding: 80px 0;
+    display: flex; align-items: center; justify-content: center;
+  }
 
-  /* Hero: use svh for dynamic toolbar, compact spacing */
-  .hero { min-height: 100svh; min-height: 100vh; padding: 0 20px; }
+  /* Setup section: too much content for one screen — flow naturally */
+  .section-setup {
+    min-height: auto; align-items: flex-start;
+    padding: 80px 0;
+  }
+
+  /* Hero: compact spacing for mobile toolbar */
+  .hero {
+    min-height: 100svh; min-height: 100vh;
+    padding: 0 20px;
+    text-align: center; align-items: center;
+  }
+  .hero .col-hero { display: flex; flex-direction: column; align-items: center; }
   .clock { margin-bottom: 24px; }
   .name { font-size: 1.4rem; }
   .tagline { font-size: 15px; margin-bottom: 14px; }
   .location { margin-bottom: 28px; }
-  .social-bar { margin-bottom: 20px; }
+  .social-bar { margin-bottom: 20px; justify-content: center; }
 
-  /* Section labels: inline flow */
+  /* Section labels: centered on top of each section */
   .section-label {
-    position: static; margin-bottom: 16px;
+    position: static;
+    display: block; width: 100%; text-align: center;
+    margin-bottom: 32px;
     opacity: 1; transform: none; top: auto; left: auto;
+    font-size: 12px;
   }
+
+  /* Subsection labels: centered */
+  .subsection-label { text-align: center; }
+  .setup-intro { text-align: center; }
+
+  /* Hardware: center everything */
+  .hw-info { text-align: center; }
+  .hw-name { text-align: center; }
+  .hw-tagline { text-align: center; }
+  .hw-specs { align-items: center; max-width: 320px; margin: 0 auto; }
 
   /* Nav: hamburger on mobile */
   .nav-links { display: none; }
@@ -573,15 +605,28 @@ a { color: inherit; text-decoration: none; }
   .ai-primary-grid { margin-bottom: 36px; }
   .ai-card-primary { padding: 20px; }
 
-  /* Newsletter */
-  .newsletter-heading { font-size: 24px; }
+  /* Work: center on mobile */
+  .work-card { text-align: center; }
+  .work-role { text-align: center; }
+  .work-indicator { text-align: center; display: block; }
+
+  /* Newsletter: center on mobile */
+  .newsletter-heading { font-size: 24px; text-align: center; }
+  .newsletter-sub { text-align: center; }
   .form-row { flex-direction: column; }
 
-  /* Footer */
-  .footer-inner { flex-direction: column; gap: 20px; }
-  .action-row { flex-wrap: wrap; }
+  /* Writing: center the note */
+  .writing-note { text-align: center; }
 
-  /* Scroll progress: hide on mobile (too small, jumps with toolbar) */
+  /* About CTA: center */
+  .about-cta { text-align: center; }
+
+  /* Footer */
+  .footer-inner { flex-direction: column; gap: 20px; align-items: center; text-align: center; }
+  .footer-links { justify-content: center; }
+  .action-row { flex-wrap: wrap; justify-content: center; }
+
+  /* Scroll progress: hide on mobile */
   .scroll-progress { display: none; }
 
   /* Scroll indicator: lower on mobile */
@@ -595,11 +640,11 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 480px) {
   .col, .col-sm, .col-md, .col-wide, .col-hero { padding: 0 16px; }
   .name { font-size: 1.3rem; }
-  .section { padding: 64px 0; }
-  .hw-image img { max-width: 280px; }
+  .hw-image img { max-width: 260px; }
+  .hw-specs { max-width: 280px; }
 
   /* Stack action buttons vertically */
-  .action-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .action-row { flex-direction: column; align-items: center; gap: 10px; width: 100%; }
   .action-divider { display: none; }
   .btn { width: 100%; justify-content: center; }
 }
