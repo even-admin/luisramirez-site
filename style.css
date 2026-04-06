@@ -539,21 +539,16 @@ a { color: inherit; text-decoration: none; }
    ============================================ */
 
 @media (max-width: 768px) {
-  /* Layout: each section still feels like a full page */
+  /* Layout: free scroll — no forced heights, generous padding */
   .col, .col-sm, .col-md, .col-wide, .col-hero { padding: 0 20px; }
   .section {
-    min-height: 100svh; min-height: 100vh;
-    padding: 80px 0;
-    display: flex; align-items: center; justify-content: center;
+    min-height: auto;
+    padding: 64px 0;
   }
 
-  /* Setup section: too much content for one screen — flow naturally */
-  .section-setup {
-    min-height: auto; align-items: flex-start;
-    padding: 80px 0;
-  }
+  .section-setup { padding: 64px 0; }
 
-  /* Hero: compact spacing for mobile toolbar */
+  /* Hero: keep full height for impact */
   .hero {
     min-height: 100svh; min-height: 100vh;
     padding: 0 20px;

@@ -14,7 +14,12 @@
 
   function initLenis() {
     if (typeof Lenis === 'undefined') return;
-    lenis = new Lenis({ lerp: 0.08, smooth: true });
+    var isMobile = window.innerWidth < 768;
+    lenis = new Lenis({
+      lerp: isMobile ? 0.15 : 0.08,
+      smooth: true,
+      touchMultiplier: isMobile ? 2 : 1
+    });
 
     lenis.on('scroll', function () {
       if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.update();
