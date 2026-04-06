@@ -152,9 +152,35 @@
       link.addEventListener('click', function (e) {
         e.preventDefault();
         var target = document.getElementById(link.getAttribute('data-section'));
+        // Close hamburger menu if open
+        nav.classList.remove('nav-open');
         if (target && lenis) lenis.scrollTo(target, { offset: -60 });
         else if (target) target.scrollIntoView({ behavior: 'smooth' });
       });
+    });
+
+    // Panel links (mobile hamburger) — same behavior
+    var panelLinks = document.querySelectorAll('.nav-panel .nav-link');
+    panelLinks.forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById(link.getAttribute('data-section'));
+        nav.classList.remove('nav-open');
+        if (target && lenis) lenis.scrollTo(target, { offset: -60 });
+        else if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  }
+
+  // ── Hamburger Menu Toggle ─────────────────
+
+  function initHamburger() {
+    var btn = document.getElementById('nav-hamburger');
+    var nav = document.getElementById('site-nav');
+    if (!btn || !nav) return;
+
+    btn.addEventListener('click', function () {
+      nav.classList.toggle('nav-open');
     });
   }
 
@@ -378,6 +404,7 @@
 
     initPreloader();
     initNav();
+    initHamburger();
     initScrollProgress();
     initSectionAnimations();
     initHardwareParallax();
