@@ -193,6 +193,7 @@
     navEl = document.getElementById('cfg-nav');
     allSteps = Array.prototype.slice.call(stepperEl.querySelectorAll('.cfg-step'));
 
+    clearIfFreshVisit();
     restoreState();
     parseURLParams();
     bindNavigation();
@@ -226,6 +227,25 @@
   }
 
   // ── Session Storage ──
+
+  function clearIfFreshVisit() {
+    // Preserve state only on page refresh (F5 / accidental reload during call).
+    // Any other navigation (link click, address bar) starts with a clean form.
+    var isRefresh = false;
+    try {
+      var nav = performance.getEntriesByType('navigation');
+      if (nav.length > 0) isRefresh = nav[0].type === 'reload';
+    } catch (e) {
+      // Fallback for older browsers
+      isRefresh = performance.navigation && performance.navigation.type === 1;
+    }
+    if (!isRefresh) {
+      try {
+        sessionStorage.removeItem('cfg_state_infraestructura');
+        sessionStorage.removeItem('cfg_state_software');
+      } catch (e) {}
+    }
+  }
 
   function saveState() {
     try {
