@@ -10,63 +10,63 @@
 
   var PRICING = {
     infraestructura: {
-      estrategia: { base: 8000 },
+      estrategia: { base: 3500 },
       web: {
-        landing: 12000,
-        estandar: 22000,
-        completo: 38000,
-        plataforma: 65000,
+        landing: 6000,
+        estandar: 12000,
+        completo: 20000,
+        plataforma: 35000,
         addons: {
-          blog: 4500,
-          citas: 3500,
-          galeria: 3500,
-          formulario_crm: 3000,
-          copywriting_even: 7500,
-          copywriting_bilingue: 12000,
-          fotografia: 8000
+          blog: 2500,
+          citas: 1800,
+          galeria: 1800,
+          formulario_crm: 1500,
+          copywriting_even: 4000,
+          copywriting_bilingue: 6500,
+          fotografia: 4500
         }
       },
       google: {
-        perfil_negocio: 3000,
-        workspace: 3500,
-        workspace_per_user: 500,
-        analytics: 2500,
-        ads_setup: 5500,
-        ads_budget_5k: 3500,
-        ads_budget_10k: 5500,
-        ads_budget_25k: 8500
+        perfil_negocio: 1500,
+        workspace: 2000,
+        workspace_per_user: 300,
+        analytics: 1500,
+        ads_setup: 3000,
+        ads_budget_5k: 2000,
+        ads_budget_10k: 3500,
+        ads_budget_25k: 5000
       },
       crm: {
-        hubspot: 10000,
-        custom: 22000,
-        secuencias_email: 4500,
-        lead_scoring: 3500,
-        dashboard: 4000
+        hubspot: 5500,
+        custom: 12000,
+        secuencias_email: 2500,
+        lead_scoring: 2000,
+        dashboard: 2500
       },
       automatizacion: {
-        tools_2_3: 8000,
-        tools_4_6: 14000,
-        tools_7_plus: 22000,
-        flujo_formulario: 3500,
-        agenda: 3000,
-        facturacion: 4500,
-        notificaciones: 2500
+        tools_2_3: 4500,
+        tools_4_6: 7500,
+        tools_7_plus: 12000,
+        flujo_formulario: 2000,
+        agenda: 1500,
+        facturacion: 2500,
+        notificaciones: 1500
       },
       contenido: {
-        por_canal: 2500,
-        calendario: 3500,
-        estrategia_doc: 5500,
-        creacion_even: 10000,
-        creacion_mixto: 5000,
-        retainer_mensual: 8000
+        por_canal: 1500,
+        calendario: 2000,
+        estrategia_doc: 3000,
+        creacion_even: 5500,
+        creacion_mixto: 3000,
+        retainer_mensual: 4500
       }
     },
     software: {
-      discovery: 12000,
+      discovery: 6500,
       retainer: {
-        '40h': 35000,
-        '80h': 65000,
-        '120h': 90000
+        '40h': 24000,
+        '80h': 44000,
+        '120h': 60000
       }
     },
     discounts: {
