@@ -2,7 +2,7 @@
    luisracosta.com — Full-Screen Scroll Redesign
    GSAP + ScrollTrigger + Lenis
    Per-section animations, gentle snap,
-   scroll progress, clock, lottery, copy email
+   scroll progress, clock, lottery
    ============================================ */
 
 (function () {
@@ -132,7 +132,7 @@
     });
 
     var links = document.querySelectorAll('.nav-link');
-    var sections = ['about', 'servicios', 'setup', 'work', 'trayectoria', 'writing', 'newsletter'];
+    var sections = ['about', 'setup', 'work', 'trayectoria', 'writing', 'newsletter'];
 
     sections.forEach(function (id) {
       var section = document.getElementById(id);
@@ -214,21 +214,6 @@
     animateSection('#about', '[data-animate]', {
       y: 0, opacity: 1, duration: 0.6, stagger: 0.15
     });
-
-    // Servicios (Configurador): title, desc, and package cards fade up
-    animateSection('#servicios', '.cfg-landing-title[data-animate]', {
-      y: 0, opacity: 1, duration: 0.5
-    });
-    animateSection('#servicios', '.cfg-landing-desc[data-animate]', {
-      y: 0, opacity: 1, duration: 0.5
-    });
-    var packageCards = document.querySelectorAll('#servicios .cfg-package-grid [data-animate]');
-    if (packageCards.length) {
-      gsap.to(packageCards, {
-        scrollTrigger: { trigger: '#servicios .cfg-package-grid', start: 'top 85%', once: true },
-        opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power2.out', stagger: 0.08
-      });
-    }
 
     // Trayectoria: timeline entries fade up staggered
     animateSection('#trayectoria', '.writing-note[data-animate]', {
@@ -336,40 +321,6 @@
     });
   }
 
-  // ── Copy Email ────────────────────────────
-
-  function initCopyEmail() {
-    var btn = document.getElementById('copy-email');
-    if (!btn) return;
-
-    btn.addEventListener('click', function () {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText('contacto@luisracosta.com').then(function () {
-          showToast('Copied');
-        });
-      } else {
-        var ta = document.createElement('textarea');
-        ta.value = 'contacto@luisracosta.com';
-        ta.style.cssText = 'position:fixed;opacity:0';
-        document.body.appendChild(ta); ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        showToast('Copied');
-      }
-    });
-  }
-
-  function showToast(msg) {
-    var toast = document.createElement('div');
-    toast.className = 'toast'; toast.textContent = msg;
-    document.body.appendChild(toast);
-    requestAnimationFrame(function () { toast.classList.add('visible'); });
-    setTimeout(function () {
-      toast.classList.remove('visible');
-      setTimeout(function () { toast.remove(); }, 300);
-    }, 2000);
-  }
-
   // ── Newsletter ────────────────────────────
 
   function initNewsletter() {
@@ -409,7 +360,6 @@
     initScrollProgress();
     initSectionAnimations();
     initHardwareParallax();
-    initCopyEmail();
     initNewsletter();
   });
 
